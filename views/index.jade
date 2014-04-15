@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1= title
+
+      main(role='main')
+
+        article(role='rules')
+          h3 Equipment
+          div.block For each participant, one chair is required. It should be a normal chair with four legs, and it should not be too heavy.
+
+          h3 How to
+          div.block The players are standing in a circle. Their chair is in front of them (so all chairs are in a circle as well). After the starting signal, the players try to balance their chairs on just two feet each. Then, on a command, all players let their chair loose, step forward and take the chair of the player in front of them (i.e., the next player in the circle). The group has to manage to be so fast that no chair falls over. Are they able to do that? It that is too easy for your group, increase the distance between the chairs, or put the chairs alternately inside and outside the circle of players.
+
+        div.tags
+          ul
+            li: a(href='#') Group dynamics game
+            li: a(href='#') Coordination game
+            li: a(href='#') Game for 2 to 10 players
+            li: a(href='#') Game for 10 to 20 players
+            li: a(href='#') Game with chairs
+            li: a(href='#') Indoor game
+
+      div.nextlink
+        a(href='#') Next
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About

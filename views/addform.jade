@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1= title
+
+      main(role='main')
+        div.addform
+          form(method='post' action='')
+            div: input(type='text' name='name' placeholder='Name')
+            div: textarea(name='categories' placeholder='Categories, separate by comma')
+            div: textarea(name='data' placeholder='Actual data')
+            div: input(type='submit' value='Submit')
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About
