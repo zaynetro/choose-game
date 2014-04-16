@@ -9,10 +9,8 @@ block content
       main(role='main')
         div.addform
           form(method='post' action='')
-            div: input(type='text' name='name' placeholder='Name')
-            div: textarea(name='categories' placeholder='Categories, separate by comma')
-            div: textarea(name='data' placeholder='Actual data')
-            div: input(type='submit' value='Submit')
+            input(style='width:300px;' type='text' name='url' placeholder='URL' value='http://www.games-wiki.org/w/index.php?title=Ambiguous&action=edit')
+            input(type='submit' value='Submit')
 
       footer(role='helplinks')
         a(href='/') Home

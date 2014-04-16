@@ -8,7 +8,9 @@ block content
 
       main(role='main')
 
-        article(role='rules')
+        article(role='rules')=game.data
+
+
           h3 Equipment
           div.block For each participant, one chair is required. It should be a normal chair with four legs, and it should not be too heavy.
 
@@ -17,12 +19,8 @@ block content
 
         div.tags
           ul
-            li: a(href='#') Group dynamics game
-            li: a(href='#') Coordination game
-            li: a(href='#') Game for 2 to 10 players
-            li: a(href='#') Game for 10 to 20 players
-            li: a(href='#') Game with chairs
-            li: a(href='#') Indoor game
+            each cat in game.categories
+              li: a(href='#')= cat.name
 
       div.nextlink
         a(href='#') Next
