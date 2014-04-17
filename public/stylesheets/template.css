@@ -11,7 +11,7 @@ ul {
 }
 
 a {
-  color: #00B7FF;
+  color: #2786C4;
   text-decoration: none;
 }
 
@@ -82,8 +82,8 @@ a:hover {
   padding: 0.1em 0 2em;
 }
 
-.page article h3 {
-  font-size: 1.2em;
+.page article h2 {
+  font-size: 1.5em;
   padding: 0;
   margin: 1em 0 0.7em;
 }

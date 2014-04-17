@@ -62,7 +62,7 @@ gameSchema.statics = {
    * Get random entry
    */
   random : function (cb) {
-    var rand   = Math.random();
+    var rand = Math.random();
 
     this.findOne({
         'random' : {
@@ -70,25 +70,25 @@ gameSchema.statics = {
         }
       },
       {
-        'random' : 0
+        'name' : 1
       })
-      .populate('categories')
       .exec(function (err, result) {
         if(result) return cb(err, result);
 
         this.findOne({
           'random' : {
-            '$gte' : rand
+            '$lte' : rand
           }
         },
         {
-          'random' : 0
+          'name' : 1
         })
-        .populate('categories')
         .exec(cb);
 
       }.bind(this));
   }
 };
+
+gameSchema.index({ random : 1 });
 
 mongoose.model('Game', gameSchema);

@@ -35,32 +35,43 @@ module.exports = function (url, cb) {
 
     var data = w.$('#wpTextbox1').val();
 
+    var sidebar    = data.match(/^\{\{([^])*\}\}/);
+        categories = data.match(/\[\[([\w\s]+)\:([\w\s]+)\]\]/g);
 
-    var additionalCats = data.match(/Type =(.*)/i);
-    additionalCats = additionalCats[0].match(/\{\{([\w\s]+)\}\}/g);
+    sidebar = (sidebar && sidebar.length) ? sidebar[0] : '';
+    categories = (categories && categories.length) ? categories : [data.length];
 
-    if(additionalCats) {
-      additionalCats.forEach(function (el) {
-        game.categories.push(el.replace('{{', '').replace('}}', '').trim().toLowerCase());
-      });
-    }
+    var rules = data.substring(sidebar.length, data.indexOf(categories[0]));
+    rules = rules.trim();
 
-    var categories = data.match(/\[\[Category\:(.*)\]\]/gi);
+    var cats = [];
+
     categories.forEach(function (el) {
-      game.categories.push(el.replace('[[Category:', '').replace(']]', '').trim().toLowerCase());
+      var tmp = el.match(/\[\[Category:([\w\s]+)\]\]/i);
+
+      if(tmp && tmp.length) cats.push(tmp[1].toLowerCase());
     });
 
-    var rules = data.match(/\}\}\n[']{3}([^[]*)\[\[Category\:/i);
-    console.log(rules);
+    var morecats = sidebar.match(/Type =(.*)/i);
 
-    game.data = "'''"+rules[1];
+    if(morecats && morecats.length) {
+      var types = morecats[0].match(/\{\{([^{]+)\}\}/g);
+      if(types) {
+        types.forEach(function (el) {
+          cats.push(el.substring(2, el.length - 2).toLowerCase());
+        });
+      }
+    }
+
+    game.data = rules;
+    game.categories = cats;
 
     cb(null, game);
 
     /*
 
     Match sidebar ->  ^\{\{([^])*\}\}
-    Match categories and de ->  \[\[([\w\s]+)\:([\w\s]+)\]\]
+    Match categories and de ->  \[\[([\w\s]+)\:([\w\s]+)\]\] g
     Rest is data
 
     For sidebar:

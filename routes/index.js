@@ -2,27 +2,51 @@
  * Pages
  */
 
-var gamePage = require('../helpers/parsers/gamepage'),
-    mongoose = require('mongoose');
+var gamePage    = require('../helpers/parsers/gamepage'),
+    syntaxParse = require('../helpers/parsers/syntax'),
+    mongoose    = require('mongoose');
 
 exports.index = function (req, res) {
 
-  var Game     = mongoose.model('Game');
+  var Game = mongoose.model('Game');
 
   Game.random(function (err, game) {
     if(err) console.log(err);
 
     if(game) {
-      return res.render('index', {
-        title : game.name,
-        game  : game
-      });
+      return res.redirect('/game/'+game.name.replace(/ /g, '_'));
     }
 
     res.render('404', {
       title : 'Not found'
     });
   });
+};
+
+exports.game = function (req, res) {
+
+  var Game = mongoose.model('Game'),
+      name = req.params.name;
+
+  Game.findOne({ name : new RegExp(name.replace(/_/g, ' '), 'i') })
+      .populate('categories', 'name')
+      .exec(function (err, game) {
+        if(err) console.log(err);
+
+        if(game) {
+          var g = game;
+          g.data = syntaxParse(game.data);
+
+          return res.render('game', {
+            title : g.name,
+            game  : g
+          });
+        }
+
+        res.render('404', {
+          title : 'Not found'
+        });
+      });
 };
 
 exports.addform = function (req, res) {
