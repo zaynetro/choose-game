@@ -4,23 +4,23 @@ block content
   div.page
     div.wrapper
       header(role='title')
-        h1= title
+        h1#gameName= title
 
       main(role='main')
 
-        article(role='rules')!=game.data
+        article#gameRules(role='rules')!=game.data
 
         div.tags
-          ul
+          ul#gameCats
             each cat in game.categories
-              li: a(href='#')= cat.name
+              li: a(href='/category/#{cat.name.replace(/ /g, "_")}')= cat.name
 
       div.nextlink
-        a#next(href='/') Next
+        a#gameNext(href='/') Next
 
       footer(role='helplinks')
-        a(href='/' data-global) Home
-        a(href='/about' data-global) About
+        a(href='/') Home
+        a(href='/about') About
 
   script(src='/javascripts/jquery-2.1.0.min.js')
   script(src='/javascripts/game.js')

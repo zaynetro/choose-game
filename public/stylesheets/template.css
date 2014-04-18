@@ -94,18 +94,30 @@ a:hover {
 }
 
 .page .nextlink a {
+  position: relative;
   display: block;
-  background-color: #ecf0f1;
+  outline: none;
+  background: #ecf0f1;
   font-size: 1.1em;
   padding: 0.5em 0;
   text-align: center;
+  letter-spacing: 1px;
   color: #222;
   text-decoration: none;
-  transition: background-color 0.2s;
+  transition: background 0.2s;
 }
 
 .page .nextlink a:hover {
-  background-color: #bdc3c7;
+  background: #bdc3c7;
+}
+
+.page .nextlink .disabled {
+  opacity: 0.6;
+}
+
+.page .nextlink .disabled:hover {
+  cursor: default;
+  background: #edf0f1;
 }
 
 .page footer {

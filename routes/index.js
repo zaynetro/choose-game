@@ -6,6 +6,12 @@ var gamePage    = require('../helpers/parsers/gamepage'),
     syntaxParse = require('../helpers/parsers/syntax'),
     mongoose    = require('mongoose');
 
+function render404(res) {
+  res.render('404', {
+    title : 'Not found'
+  });
+}
+
 exports.index = function (req, res) {
 
   var Game = mongoose.model('Game');
@@ -17,9 +23,7 @@ exports.index = function (req, res) {
       return res.redirect('/game/'+game.name.replace(/ /g, '_'));
     }
 
-    res.render('404', {
-      title : 'Not found'
-    });
+    return render404(res);
   });
 };
 
@@ -27,6 +31,10 @@ exports.game = function (req, res) {
 
   var Game = mongoose.model('Game'),
       name = req.params.name;
+
+  if(!name || !name.length) {
+    return render404(res);
+  }
 
   Game.findOne({ name : new RegExp(name.replace(/_/g, ' '), 'i') })
       .populate('categories', 'name')
@@ -43,11 +51,58 @@ exports.game = function (req, res) {
           });
         }
 
-        res.render('404', {
-          title : 'Not found'
-        });
+        return render404(res);
       });
 };
+
+exports.category = function (req, res) {
+
+  var Category = mongoose.model('Category'),
+      Game     = mongoose.model('Game'),
+      name     = req.params.name;
+
+  if(!name || !name.length) {
+    return render404(res);
+  }
+
+  Category.findOne({
+      name : new RegExp(name.replace(/_/g, ' '), 'i')
+    },
+    {
+      '_id'  : 1,
+      'name' : 1
+    },
+    function (err, category) {
+      if(err) console.log(err);
+
+      if(category) {
+        Game.find({
+            'categories' : category._id
+          },
+          {
+            'name' : 1
+          })
+          .sort('name')
+          .limit(20)
+          .exec(function (err, games) {
+            if(err) console.log(err);
+
+            if(games) {
+              return res.render('category', {
+                title : category.name,
+                games : games
+              })
+            }
+
+            return render404(res);
+          });
+      }
+
+      return render404(res);
+    }
+  );
+};
+
 
 exports.addform = function (req, res) {
   res.render('addform', {

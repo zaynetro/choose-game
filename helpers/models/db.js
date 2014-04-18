@@ -61,7 +61,23 @@ gameSchema.statics = {
   /**
    * Get random entry
    */
-  random : function (cb) {
+  random : function (options, cb) {
+    var defaults = {
+      fields : {
+        name : 1
+      },
+      populate : {
+        path : 'categories'
+      }
+    };
+
+    if(typeof cb !== 'function') {
+      cb = options;
+      options = null;
+    }
+
+    options || (options = defaults);
+
     var rand = Math.random();
 
     this.findOne({
@@ -69,9 +85,9 @@ gameSchema.statics = {
           '$gte' : rand
         }
       },
-      {
-        'name' : 1
-      })
+      options.fields
+      )
+      .populate(options.populate)
       .exec(function (err, result) {
         if(result) return cb(err, result);
 
@@ -80,9 +96,9 @@ gameSchema.statics = {
             '$lte' : rand
           }
         },
-        {
-          'name' : 1
-        })
+        options.fields
+        )
+        .populate(options.populate)
         .exec(cb);
 
       }.bind(this));

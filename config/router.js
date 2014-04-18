@@ -15,7 +15,8 @@ var router = express.Router();
  */
 router.get('/',    routes.index);
 
-router.get('/game/:name', routes.game);
+router.get('/game/:name',     routes.game);
+router.get('/category/:name', routes.category);
 
 // Remove
 router.get( '/add', routes.addform);
@@ -30,5 +31,6 @@ router.all('/api*', function (req, res, next) {
   next();
 });
 router.get('/api/game/randomName', api.getRandomName);
+router.get('/api/game/random', api.getRandom);
 
 module.exports = router;

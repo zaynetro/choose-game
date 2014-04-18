@@ -45,7 +45,7 @@ module.exports = function (text) {
   if(t && t.length) {
     t.forEach(function (el) {
       t2 = el.replace(/[[]{2}|[\]]{2}/g, '');
-      t2 = "<a href='/game/"+t2.replace(/ /g, '_')+"'>"+t2+"</a>";
+      t2 = "<a href='/game/"+t2.replace(/ /g, '_')+"' ref='game'>"+t2+"</a>";
       r = r.replace(el, t2);
     });
   }
