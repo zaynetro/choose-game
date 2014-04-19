@@ -30,7 +30,7 @@ router.all('/api*', function (req, res, next) {
 
   next();
 });
-router.get('/api/game/randomName', api.getRandomName);
-router.get('/api/game/random', api.getRandom);
+router.get('/api/game',       api.getRandom);
+router.get('/api/game/:name', api.getGame);
 
 module.exports = router;

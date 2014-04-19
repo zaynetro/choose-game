@@ -5,30 +5,30 @@
       gameName  : $('#gameName'),
       gameRules : $('#gameRules'),
       gameNext  : $('#gameNext'),
-      gameCats  : $('#gameCats')
+      gameCats  : $('#gameCats'),
+      loader    : $('#loader')
     };
 
     this.current = {
-      game : {
-        name : this.$.gameName.text(),
-        data : this.$.gameRules.html()
-      },
+      game : null,
       next : null
     };
 
     this.router = router;
-
     this.loadNext();
   };
 
   Page.prototype = {
     set : function (obj) {
-      if(!obj || !obj.game) return;
+      if(!obj || !obj.game) {
+        this.load();
+        return;
+      }
 
       this.current = obj;
 
       this.$.gameName.text(obj.game.name);
-      this.$.gameRules.html(obj.game.data);
+      this.$.gameRules.hide().html(obj.game.data).fadeIn('fast');
       document.title = obj.game.name;
       this.appendCats();
       if(obj.next) {
@@ -40,7 +40,7 @@
     },
 
     loadNext : function () {
-      $.get('/api/game/random', function (data) {
+      $.get('/api/game?t=random', function (data) {
         if(data && data.name && data.name.length) {
           var url = data.name.replace(/ /g, '_');
           this.$.gameNext.attr('href', '/game/'+url).removeClass('disabled');
@@ -52,18 +52,40 @@
 
     appendCats : function () {
       this.$.gameCats.empty();
-      this.current.game.categories.forEach(function (el) {
+      this.current.game.categories && this.current.game.categories.forEach(function (el) {
         this.$.gameCats.append("<li><a href='/category/"+el.name.replace(/ /g, '_')+"'>"+el.name+"</a></li>");
       }.bind(this));
     },
 
-    load : function (url) {
-      if(!url) return false;
-
-
+    getCats : function () {
+      var cats = [];
+      this.$.gameCats.find('li').each(function () {
+        cats.push({ name : $(this).text() });
+      });
+      return cats;
     },
 
-    next : function (url, done) {
+    load : function (url) {
+      if(!url) {
+        url = window.location.pathname;
+      }
+
+      url = url.replace('/game/', '');
+
+      $.get('/api/game/'+encodeURIComponent(url), function (data) {
+        if(data && data.name) {
+          this.current.game = data;
+          this.router.goTo(url, this.current);
+
+          this.$.loader.hide();
+          this.set(this.current);
+        }
+      }.bind(this));
+
+      this.loadNext();
+    },
+
+    next : function (url) {
       if(!url) return false;
 
       var current = {
@@ -73,12 +95,6 @@
 
       this.set(current);
       this.router.goTo(url, current);
-
-      if(typeof done === 'function') {
-        setTimeout(1000, function () {
-          done();
-        });
-      }
     }
   };
 
@@ -107,13 +123,13 @@
     $('.rules a[ref="game"]').on('click', function (e) {
       e.preventDefault();
 
-      page.load($(e.currentTarget).attr('href'));
+      page.load($(this).attr('href'));
     });
 
     $('#gameNext').on('click', function (e) {
       e.preventDefault();
 
-      page.next($(e.currentTarget).attr('href'));
+      page.next($(this).attr('href'));
       $(this).removeAttr('href').addClass('disabled');
     });
 

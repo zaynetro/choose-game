@@ -6,42 +6,75 @@
 var mongoose    = require('mongoose'),
     syntaxParse = require('../helpers/parsers/syntax');
 
-exports.getRandomName = function (req, res) {
+exports.getRandom = function (req, res) {
+  var Game = mongoose.model('Game'),
+      type = req.query.t;
 
-  var Game = mongoose.model('Game');
+  if(type === 'random') {
+    Game.random({
+        fields : {
+          random : 0
+        },
+        populate : {
+          path   : 'categories',
+          select : 'name'
+        }
+      },
+      function (err, game) {
+      if(err) console.log(err);
 
-  Game.random(function (err, game) {
-    if(err) console.log(err);
+      if(game) {
+        var g = game;
+        g.data = syntaxParse(g.data);
+        return res.json(g);
+      }
 
-    if(game) {
-      return res.json(game);
-    }
+      res.json(500, { error : 'Internal error' });
+    });
 
-    res.json({ error : 'Internal error' });
-  });
+    return;
+  }
+
+  if(type === 'randomName') {
+    var Game = mongoose.model('Game');
+
+    Game.random(function (err, game) {
+      if(err) console.log(err);
+
+      if(game) {
+        return res.json(game);
+      }
+
+      res.json(500, { error : 'Internal error' });
+    });
+
+    return;
+  }
+
+  return res.json(500, { error : 'Wrong request' });
 };
 
-exports.getRandom = function (req, res) {
-  var Game = mongoose.model('Game');
+exports.getGame = function (req, res) {
+  var Game = mongoose.model('Game'),
+      name = req.params.name;
 
-  Game.random({
-      fields : {
-        random : 0
-      },
-      populate : {
-        path   : 'categories',
-        select : 'name'
-      }
-    },
-    function (err, game) {
-    if(err) console.log(err);
+  if(!name || !name.length) {
+    return res.json(500, { error : 'Wrong request' });
+  }
 
-    if(game) {
-      var g = game;
-      g.data = syntaxParse(g.data);
-      return res.json(g);
-    }
+  name = decodeURIComponent(name).replace(/_/g, ' ');
 
-    res.json({ error : 'Internal error' });
-  });
+  Game.findOne({ name : new RegExp(name, 'i') }, { random : 0, ref : 0 })
+      .populate('categories', 'name')
+      .exec(function (err, game) {
+        if(err) console.log(err);
+
+        if(game) {
+          var g = game;
+          g.data = syntaxParse(g.data);
+          return res.json(g);
+        }
+
+        res.json(404, { error : 'Not found' });
+      });
 };

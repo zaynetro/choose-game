@@ -8,12 +8,13 @@ block content
 
       main(role='main')
 
-        article#gameRules(role='rules')!=game.data
+        div#loader
+          div.loadingbar
+
+        article#gameRules(role='rules')
 
         div.tags
           ul#gameCats
-            each cat in game.categories
-              li: a(href='/category/#{cat.name.replace(/ /g, "_")}')= cat.name
 
       div.nextlink
         a#gameNext(href='/') Next

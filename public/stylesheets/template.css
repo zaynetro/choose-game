@@ -148,3 +148,83 @@ a:hover {
   font-size: 0.8em;
   margin: 0 0.5em;
 }
+
+
+#loader {
+  position: relative;
+  overflow: hidden;
+  padding: 5px;
+  min-height: 10em;
+}
+
+.loadingbar {
+  height: 7px;
+  width: 100%;
+  background-color: #27ae60;
+  box-shadow: 1px 1px 2px #aaa;
+  -webkit-animation: pulse 1.5s infinite ease-in-out;
+  -moz-animation: pulse 1.5s infinite ease-in-out;
+  -ms-animation: pulse 1.5s infinite ease-in-out;
+  -o-animation: pulse 1.5s infinite ease-in-out;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@-webkit-keyframes "pulse" {
+  from {
+    width: 0;
+  }
+  30% {
+    width: 40%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@-moz-keyframes "pulse" {
+  from {
+    width: 0;
+  }
+  30% {
+    width: 40%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@-ms-keyframes "pulse" {
+  from {
+    width: 0;
+  }
+  30% {
+    width: 40%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@-o-keyframes "pulse" {
+  from {
+    width: 0;
+  }
+  30% {
+    width: 40%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes "pulse" {
+  from {
+    width: 0;
+  }
+  30% {
+    width: 40%;
+  }
+  to {
+    width: 100%;
+  }
+}

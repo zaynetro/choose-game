@@ -36,23 +36,11 @@ exports.game = function (req, res) {
     return render404(res);
   }
 
-  Game.findOne({ name : new RegExp(name.replace(/_/g, ' '), 'i') })
-      .populate('categories', 'name')
-      .exec(function (err, game) {
-        if(err) console.log(err);
+  name = name.replace(/_/g, ' ');
 
-        if(game) {
-          var g = game;
-          g.data = syntaxParse(game.data);
-
-          return res.render('game', {
-            title : g.name,
-            game  : g
-          });
-        }
-
-        return render404(res);
-      });
+  return res.render('game', {
+    title : name
+  });
 };
 
 exports.category = function (req, res) {
