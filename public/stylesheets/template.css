@@ -32,6 +32,24 @@ a:hover {
   text-transform: uppercase;
 }
 
+.page article ul {
+  margin: 0.2em 0 0.2em 1em;
+}
+
+.page article > ul {
+  margin-left: 0;
+}
+
+.page article ul > li:before {
+  content: '\2022';
+  color: #186496;
+  padding-right: 0.4em;
+}
+
+.page article li {
+  line-height: 1.5;
+}
+
 .page .tags li {
   float: left;
   margin: 5px 3px;

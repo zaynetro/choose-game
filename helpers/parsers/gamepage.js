@@ -32,10 +32,11 @@ module.exports = function (url, cb) {
     };
 
     game.name = w.$('#firstHeading').text().trim();
+    game.ref  = url;
 
     var data = w.$('#wpTextbox1').val();
 
-    var sidebar    = data.match(/^\{\{([^])*\}\}/);
+    var sidebar    = data.match(/^\{\{([^])*\n\}\}/);
         categories = data.match(/\[\[([\w\s]+)\:([\w\s]+)\]\]/g);
 
     sidebar = (sidebar && sidebar.length) ? sidebar[0] : '';
@@ -43,6 +44,14 @@ module.exports = function (url, cb) {
 
     var rules = data.substring(sidebar.length, data.indexOf(categories[0]));
     rules = rules.trim();
+
+    console.log('SIDEBAR');
+    console.log(sidebar);
+    console.log('RULES');
+    console.log(rules);
+    console.log('CATEGORIES');
+    console.log(categories);
+    console.log('#######################')
 
     var cats = [];
 

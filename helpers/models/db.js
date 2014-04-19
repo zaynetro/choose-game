@@ -53,6 +53,7 @@ var gameSchema = new Schema({
   categories : [{ type : Schema.Types.ObjectId, ref : 'Category'}],
   data       : { type : String, default : '' },
   createdAt  : { type : Date,   default : Date.now },
+  ref        : { type : String, default : '' },
   random     : { type : Number, default : Math.random }
 });
 
