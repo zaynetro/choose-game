@@ -65,6 +65,13 @@
       return cats;
     },
 
+    setError : function () {
+      document.title = 'Not found';
+      this.$.gameName.text('Not found');
+      this.$.gameRules.text("Nothing found :'-(");
+      this.$.gameCats.empty();
+    },
+
     load : function (url) {
       if(!url) {
         url = window.location.pathname;
@@ -77,10 +84,15 @@
           this.current.game = data;
           this.router.goTo(url, this.current);
 
-          this.$.loader.hide();
           this.set(this.current);
         }
-      }.bind(this));
+      }.bind(this))
+       .fail(function () {
+         this.setError();
+       }.bind(this))
+       .always(function () {
+         this.$.loader.hide();
+       }.bind(this));
 
       this.loadNext();
     },
