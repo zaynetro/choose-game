@@ -7,7 +7,6 @@ var syntax = {
 
   handleList : function (lines, start, end) {
     // TO DO: Add numbered list support
-    //console.log(lines[start].substring(0, 1));
     var res    = '',
         indent = 0;
     for(var j = start; j <= end; j += 1) {
@@ -30,6 +29,24 @@ var syntax = {
     }
 
     return res;
+  },
+
+  handleDefList : function (lines, start, end) {
+    // TO DO: Add multi-level support
+    var res = '<dl>';
+
+    for(var j = start; j <= end; j += 1) {
+      var l = lines[j];
+
+      if(l.match(/^\;{1}/) !== null) {
+        l = '<dt>' + syntax.handleLine(l.slice(1).trim()) + '</dt>';
+      } else if (l.match(/^\:{1}/) !== null) {
+        l = '<dd>' + syntax.handleLine(l.slice(1).trim()) + '</dt>';
+      }
+      res += l;
+    }
+
+    return res + '</dl>';
   },
 
   handleLine : function (line) {
@@ -86,10 +103,10 @@ var syntax = {
     for(var i = 0; i < lines.length; i += 1) {
       var line = lines[i];
 
-      if(line.match(/^[=]{3}/) != null && line.match(/[=]{3}$/) != null) {
+      if(line.match(/^[=]{3}/) !== null && line.match(/[=]{3}$/) !== null) {
         // === Level 3 === -> <h3>Level 3</h3>
         html += '<h3>' + line.substring(3, line.length - 3).trim() + '</h3>';
-      } else if(line.match(/^[=]{2}/) != null && line.match(/[=]{2}$/) != null) {
+      } else if(line.match(/^[=]{2}/) !== null && line.match(/[=]{2}$/) !== null) {
         // == Level 2 == -> <h2>Level 2</h2>
         html += '<h2>' + line.substring(2, line.length - 2).trim() + '</h2>';
       } else if(line.match(/^[-]{4,}/)) {
@@ -100,10 +117,18 @@ var syntax = {
         // * -> Bulleted
         // # -> Numbered
         start = i;
-        while(i < lines.length && lines[i].match(/^\*+|^\#+/) != null) i += 1;
+        while(i < lines.length && lines[i].match(/^\*+|^\#+/) !== null) i += 1;
         i -= 1;
         html += syntax.handleList(lines, start, i);
-      } else if(line.match(/^ +/) != null) {
+      } else if(line.match(/^\;{1}|^\:{1}/) !== null) {
+        // Definition lists
+        // ; Text -> <dt>Text</dt>
+        // : Text -> <dd>Text</dd>
+        start = i;
+        while(i < lines.length && lines[i].match(/^\;{1}|^\:{1}/) !== null) i += 1;
+        i -= 1;
+        html += syntax.handleDefList(lines, start, i);
+      } else if(line.match(/^ +/) !== null) {
         // Leading spaces -> add <pre> block
       } else {
         // Handle syntax within one line

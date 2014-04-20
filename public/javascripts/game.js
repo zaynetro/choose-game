@@ -37,6 +37,8 @@
       } else {
         this.loadNext();
       }
+      this.$.loader.hide();
+      this.events();
     },
 
     loadNext : function () {
@@ -70,6 +72,15 @@
       this.$.gameName.text('Not found');
       this.$.gameRules.text("Nothing found :'-(");
       this.$.gameCats.empty();
+      this.$.loader.hide();
+    },
+
+    events : function () {
+      var that = this;
+      this.$.gameRules.find('a[ref="game"]').on('click', function (e) {
+        e.preventDefault();
+        that.load($(this).attr('href'));
+      });
     },
 
     load : function (url) {
@@ -89,9 +100,6 @@
       }.bind(this))
        .fail(function () {
          this.setError();
-       }.bind(this))
-       .always(function () {
-         this.$.loader.hide();
        }.bind(this));
 
       this.loadNext();
@@ -131,12 +139,6 @@
     })();
 
     var page = new Page(router);
-
-    $('.rules a[ref="game"]').on('click', function (e) {
-      e.preventDefault();
-
-      page.load($(this).attr('href'));
-    });
 
     $('#gameNext').on('click', function (e) {
       e.preventDefault();

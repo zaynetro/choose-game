@@ -27,6 +27,13 @@ exports.index = function (req, res) {
   });
 };
 
+exports.about = function (req, res) {
+
+  res.render('about' , {
+    title : 'About'
+  });
+};
+
 exports.game = function (req, res) {
 
   var Game = mongoose.model('Game'),
@@ -53,11 +60,12 @@ exports.category = function (req, res) {
     return render404(res);
   }
 
+  name = name.replace(/_/g, ' ');
+
   Category.findOne({
-      name : new RegExp(name.replace(/_/g, ' '), 'i')
+      name : new RegExp(name, 'i')
     },
     {
-      '_id'  : 1,
       'name' : 1
     },
     function (err, category) {
@@ -71,19 +79,37 @@ exports.category = function (req, res) {
             'name' : 1
           })
           .sort('name')
-          .limit(20)
           .exec(function (err, games) {
             if(err) console.log(err);
 
             if(games) {
-              return res.render('category', {
-                title : category.name,
-                games : games
-              })
+              var list   = [],
+                  letter = '',
+                  block  = [],
+                  i      = -1;
+
+              games.forEach(function (el) {
+                if((el.name[0].toLowerCase() !== letter)) {
+                  list.push({
+                    letter   : el.name[0].toLowerCase(),
+                    elements : []
+                  });
+                  i += 1;
+                }
+                letter = el.name[0].toLowerCase();
+                list[i].elements.push(el);
+              });
             }
 
-            return render404(res);
+            if(!list.length) list = null;
+
+            return res.render('category', {
+              title : category.name,
+              list : list
+            });
           });
+
+        return;
       }
 
       return render404(res);

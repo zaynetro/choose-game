@@ -41,6 +41,8 @@ categorySchema.statics = {
   }
 };
 
+categorySchema.index({ name : 1 });
+
 mongoose.model('Category', categorySchema);
 
 /**
@@ -107,5 +109,6 @@ gameSchema.statics = {
 };
 
 gameSchema.index({ random : 1 });
+gameSchema.index({ name : 1 });
 
 mongoose.model('Game', gameSchema);
