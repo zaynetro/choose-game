@@ -13,6 +13,7 @@ var mongoose = require('mongoose'),
 
 var categorySchema = new Schema({
   name      : { type : String, default : '', unique : true },
+  parent    : { type : Schema.Types.ObjectId, ref : 'Category' },
   createdAt : { type : Date,   default : Date.now }
 });
 
@@ -52,7 +53,7 @@ mongoose.model('Category', categorySchema);
 
 var gameSchema = new Schema({
   name       : { type : String, default : '', unique : true },
-  categories : [{ type : Schema.Types.ObjectId, ref : 'Category'}],
+  categories : [{ type : Schema.Types.ObjectId, ref : 'Category' }],
   data       : { type : String, default : '' },
   createdAt  : { type : Date,   default : Date.now },
   ref        : { type : String, default : '' },

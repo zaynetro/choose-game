@@ -2,7 +2,7 @@
  * Pages
  */
 
-var gamePage    = require('../helpers/parsers/gamepage'),
+var pagesParse  = require('../helpers/parsers/pages'),
     syntaxParse = require('../helpers/parsers/syntax'),
     mongoose    = require('mongoose');
 
@@ -12,6 +12,31 @@ function render404(res) {
   });
 }
 
+function alphaList(list) {
+  if(!list || !list.length) return false;
+
+  var res    = [],
+      letter = '',
+      i      = -1;
+
+  res || (res = []);
+
+  list.forEach(function (el) {
+    if((el.name[0].toLowerCase() !== letter)) {
+      res.push({
+        letter   : el.name[0].toLowerCase(),
+        elements : []
+      });
+      i += 1;
+    }
+    letter = el.name[0].toLowerCase();
+    res[i].elements.push(el);
+  });
+
+  return res;
+}
+
+// Get home page -> redirect to random game
 exports.index = function (req, res) {
 
   var Game = mongoose.model('Game');
@@ -27,6 +52,7 @@ exports.index = function (req, res) {
   });
 };
 
+// About page
 exports.about = function (req, res) {
 
   res.render('about' , {
@@ -34,6 +60,7 @@ exports.about = function (req, res) {
   });
 };
 
+// Game page (game will be loaded from the page)
 exports.game = function (req, res) {
 
   var Game = mongoose.model('Game'),
@@ -50,6 +77,33 @@ exports.game = function (req, res) {
   });
 };
 
+// List of all categories page
+exports.categories = function (req, res) {
+  var Category = mongoose.model('Category');
+
+  Category.find({},
+            { name : 1 })
+          .sort('name')
+          .exec(function (err, cats) {
+            if(err) console.log(err);
+
+            if(cats) {
+              var list = alphaList(cats);
+            }
+
+            if(!list.length) list = null;
+
+            return res.render('category', {
+              title   : 'Categories',
+              baseurl : '/about',
+              itemurl : '/category/',
+              list    : list
+            });
+
+          });
+};
+
+// List of all games in category page
 exports.category = function (req, res) {
 
   var Category = mongoose.model('Category'),
@@ -83,29 +137,16 @@ exports.category = function (req, res) {
             if(err) console.log(err);
 
             if(games) {
-              var list   = [],
-                  letter = '',
-                  block  = [],
-                  i      = -1;
-
-              games.forEach(function (el) {
-                if((el.name[0].toLowerCase() !== letter)) {
-                  list.push({
-                    letter   : el.name[0].toLowerCase(),
-                    elements : []
-                  });
-                  i += 1;
-                }
-                letter = el.name[0].toLowerCase();
-                list[i].elements.push(el);
-              });
+              var list = alphaList(games);
             }
 
             if(!list.length) list = null;
 
             return res.render('category', {
-              title : category.name,
-              list : list
+              title   : category.name,
+              baseurl : '/category',
+              itemurl : '/game/',
+              list    : list
             });
           });
 
@@ -118,6 +159,11 @@ exports.category = function (req, res) {
 };
 
 
+/**
+ * ######################################################
+ * Remove later
+ *
+ */
 exports.addform = function (req, res) {
   res.render('addform', {
     title : 'Adding form'
@@ -130,7 +176,7 @@ exports.addData = function (req, res) {
       Game     = mongoose.model('Game'),
       Category = mongoose.model('Category');
 
-  gamePage(info.url, function (err, found) {
+  pagesParse.game(info.url, function (err, found) {
     if(err) {
       console.log(err);
       return res.redirect('/add?false');

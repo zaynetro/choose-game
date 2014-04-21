@@ -49,9 +49,23 @@ var syntax = {
     return res + '</dl>';
   },
 
-  handleLine : function (line) {
+  handleLeadSpace : function (lines, start, end) {
+    var res = '<pre>';
+
+    for(var j = start; j <= end; j += 1) {
+      res += syntax.handleLine(lines[j]) + '\n';
+    }
+
+    return res + '</pre>';
+  },
+
+  handleLine : function (line, paragraphed) {
     var r = line,
         t, t2;
+
+    if(paragraphed) r = '<p>' + r;
+
+    r = r.trim();
 
     // '''bold''' -> <b>bold</b>
     r = r.replace(/[']{3}(?=\w)+/g, '<b>').replace(/[']{3}(?!\w)/g, '</b>');
@@ -76,10 +90,18 @@ var syntax = {
     }
 
     /**
+     * TO DO:
+     * [http://url/ Name] -> <a href='http://url/' ref='external'>Name</a>
+     * http://url/ -> <a href='http://url/' ref='external'>http://url/</a>
+     */
+
+    /**
      * Remove unused and unparsed:
      *   {text}, {{text}}, [text], [[text]]
      */
     r = r.replace(/((\[+)|(\{+))([^\]\}]*)((\]+)|(\}+))/g, '');
+
+    if(paragraphed) r = r + '</p>';
 
     return r;
   },
@@ -128,11 +150,15 @@ var syntax = {
         while(i < lines.length && lines[i].match(/^\;{1}|^\:{1}/) !== null) i += 1;
         i -= 1;
         html += syntax.handleDefList(lines, start, i);
-      } else if(line.match(/^ +/) !== null) {
+      } else if(line.match(/^ {1}/) !== null) {
         // Leading spaces -> add <pre> block
+        start = i;
+        while(i < lines.length && lines[i].match(/^ {1}/) !== null) i += 1;
+        i -= 1;
+        html += syntax.handleLeadSpace(lines, start, i);
       } else {
         // Handle syntax within one line
-        html += syntax.handleLine(line);
+        html += syntax.handleLine(line, true);
       }
     }
 

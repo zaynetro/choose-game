@@ -67,7 +67,8 @@
       return cats;
     },
 
-    setError : function () {
+    setError : function (url) {
+      this.router.goTo('/game/' + url, {});
       document.title = 'Not found';
       this.$.gameName.text('Not found');
       this.$.gameRules.text("Nothing found :'-(");
@@ -93,13 +94,13 @@
       $.get('/api/game/'+encodeURIComponent(url), function (data) {
         if(data && data.name) {
           this.current.game = data;
-          this.router.goTo(url, this.current);
+          this.router.goTo('/game/' + url, this.current);
 
           this.set(this.current);
         }
       }.bind(this))
        .fail(function () {
-         this.setError();
+         this.setError(url);
        }.bind(this));
 
       this.loadNext();
@@ -113,8 +114,8 @@
         next : null
       }
 
-      this.set(current);
       this.router.goTo(url, current);
+      this.set(current);
     }
   };
 
@@ -132,7 +133,13 @@
           if(!url || !url.length) return false;
           obj || (obj = {});
 
-          history.pushState(obj, null, url);
+          if(window.location.pathname === url) return;
+
+          if(history.pushState) {
+            history.pushState(obj, null, url);
+          } else {
+            window.location.assign(url);
+          }
         }
       };
 

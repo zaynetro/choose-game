@@ -20,6 +20,7 @@ a:hover {
 }
 
 .page {
+  box-sizing: border-box;
   width: 700px;
   margin: 0 auto;
 }
@@ -70,17 +71,33 @@ a:hover {
   line-height: 1.5;
 }
 
+.page article h2 {
+  border-bottom: 1px solid #d5d5d5;
+}
+
+.page article pre {
+  white-space: pre-wrap;
+  padding: 0.2em 0.3em;
+  background-color: #f9f9f9;
+  border: 1px dashed #3498db;
+}
+
 .page .tags li {
   float: left;
-  margin: 5px 3px;
+  margin: 0.3em 0.2em;
 }
 
 .page .tags li > a {
-  padding: 3px 7px;
-  border-radius: 10px;
+  padding: 0.2em 0.4em;
+  border-radius: 0.5em;
   text-decoration: none;
   background-color: #27ae60;
   color: #fff;
+  transition: opacity 0.2s;
+}
+
+.page .tags li > a:hover {
+  opacity: 0.8;
 }
 
 .page .tags li:nth-of-type(8n+1) > a {
@@ -117,6 +134,7 @@ a:hover {
 
 .page article {
   clear: both;
+  min-height: 5em;
   padding: 0.1em 0 2em;
 }
 
@@ -159,7 +177,7 @@ a:hover {
 }
 
 .page footer {
-  margin-top: 2em;
+  padding: 1em 0;
   text-align: center;
 }
 
@@ -174,7 +192,6 @@ a:hover {
   position: relative;
   overflow: hidden;
   padding: 5px;
-  min-height: 10em;
 }
 
 .loadingbar {
@@ -269,4 +286,11 @@ a:hover {
 
 .page .categorylist .list li {
   line-height: 1.5;
+}
+
+@media screen and (max-width: 700px) {
+  .page {
+    width: 100%;
+    padding: 0 1em;
+  }
 }

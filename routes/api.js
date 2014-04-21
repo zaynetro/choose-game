@@ -4,6 +4,7 @@
  */
 
 var mongoose    = require('mongoose'),
+    pagesParse  = require('../helpers/parsers/pages'),
     syntaxParse = require('../helpers/parsers/syntax');
 
 exports.getRandom = function (req, res) {
@@ -77,4 +78,60 @@ exports.getGame = function (req, res) {
 
         res.json(404, { error : 'Not found' });
       });
+};
+
+exports.addAll = function (req, res) {
+
+  var Game     = mongoose.model('Game'),
+      Category = mongoose.model('Category'),
+      url      = req.body.url;
+
+  if(!url || !url.length) return res.json(500, { error : 'Wrong request' });
+
+  pagesParse.categories(url, function (err, games) {
+    if(err) {
+      return res.json(500, { error : err });
+    }
+
+    if(games) {
+      games.forEach(function (g) {
+
+        if(!g || !g.categories) return;
+
+        var cats = [];
+            data = {};
+
+        g.categories.forEach(function (el) {
+          cats.push({
+            name : el
+          });
+        });
+
+        Category.create(cats, function (err) {
+          if(err && err.code != 11000) console.log(err);
+
+          Category.getIDs(g.categories, function (err, ids) {
+            if(err) console.log(err);
+
+            data.name = g.name;
+            data.data = g.data;
+            data.categories = ids;
+
+            var game = new Game(data);
+            game.save(function (err) {
+              if(err) {
+                console.log(err);
+              }
+            });
+          });
+
+        });
+
+        });
+
+    }
+
+    console.log('Added: '+ games.length +' games');
+    res.json('Added: +games.length+ games');
+  })
 };
