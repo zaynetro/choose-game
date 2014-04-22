@@ -1,0 +1,33 @@
+extends layout
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1= title
+
+      main(role='main')
+        div.aboutpage
+          h2 What
+          p Here you can find information about games to play with your friends, while you are partying or just don't know what to do.
+
+          h2 Source
+          p All information is based on games-wiki.org
+
+          h2 What's next
+          p
+            | You can either search games by <a href='/category' ref='category'> categories</a> or just check <a href='/'>random game</a>.
+
+          h2 Contribution
+          p If you want to improve material on this web site, please, contact me.
+
+          h2 Credits
+          p
+            | Made by <a href='//zaynetro.github.io'>zaynetro</a>.
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About
+
+  script(src='/javascripts/jquery-2.1.0.min.js')
+  script(src='/javascripts/game.js')

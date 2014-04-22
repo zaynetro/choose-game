@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1#gameName: a(href=baseurl)= title
+
+      main(role='main')
+        if list
+          div.categorylist
+            each item in list
+              div.section
+                div.letter=item.letter
+                div.list
+                  ul
+                    each game in item.elements
+                      - var url = itemurl + game.name.replace(/ /g, '_');
+                      li: a(href='#{url}' ref='game')=game.name
+
+        else
+          div.nogames Catalog is empty
+
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About
+
+  script(src='/javascripts/jquery-2.1.0.min.js')
+  script(src='/javascripts/game.js')
