@@ -15,7 +15,7 @@
     };
 
     this.router = router;
-    this.loadNext();
+    this.load();
   };
 
   Page.prototype = {

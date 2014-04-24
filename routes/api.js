@@ -88,16 +88,8 @@ exports.addAll = function (req, res) {
 
   if(!url || !url.length) return res.json(500, { error : 'Wrong request' });
 
-  pagesParse.categories(url, function (err, games) {
-    if(err) {
-      return res.json(500, { error : err });
-    }
-
-    if(games) {
-      games.forEach(function (g) {
-
-        if(!g || !g.categories) return;
-
+  pagesParse.categories(url, function (g, next) {
+      if(g && typeof g === 'object' & g.categories) {
         var cats = [];
             data = {};
 
@@ -121,17 +113,31 @@ exports.addAll = function (req, res) {
             game.save(function (err) {
               if(err) {
                 console.log(err);
+                next(null);
+              } else {
+                next(game.name);
               }
             });
+
           });
 
         });
+      } else {
+        return next(null);
+      }
+    },
+    function (err, games) {
+      if(err) {
+        console.log(err);
+        return res.json(500, { error : err });
+      }
 
-        });
+      //console.log(games);
 
+      var count = (games && games.length) ? games.length : 0;
+
+      console.log('Added: ' + count + ' games');
+      res.json('Added: ' + count + ' games');
     }
-
-    console.log('Added: '+ games.length +' games');
-    res.json('Added: +games.length+ games');
-  })
+  );
 };

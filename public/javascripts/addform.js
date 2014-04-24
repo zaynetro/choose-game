@@ -8,8 +8,14 @@
     };
 
     $('#loader').show();
-    $.post('/api/add/all', data, function (data) {
-      alert('Success');
+    $.ajax({
+      type : 'POST',
+      url  : '/api/add/all',
+      data : data,
+      timeout : 0,
+      success : function (data) {
+        alert('Success');
+      }
     })
      .fail(function () {
       alert('Fail');

@@ -19,19 +19,24 @@ function getContent(url, cb) {
 /**
  * Run functions is array synchronously
  */
-function syncChain(arr, func, cb) {
+function syncChain(arr, func, saver, cb) {
   if(!arr || !arr.length) return cb(new Error('Wrong array'));
   if(typeof func !== 'function') return cb(new Error('Wrong function'));
 
   var elems  = arr,
       res    = [];
 
-  var loop = function (a) {
+  if(!cb || typeof cb !== 'function') {
+    cb = saver;
+    saver = null;
+  }
+
+  var loop = function loop(a) {
     if(!a.length) return cb(null, res);
 
     var e = a.shift();
-    func(e, function (err, result) {
-      res = res.concat(result);
+    func(e, saver, function (err, result) {
+      if(result) res = res.concat(result);
       loop(a);
     });
   };
@@ -44,10 +49,20 @@ var pages = {
   /**
    * From categories page get all categories and pass them to category function synchronously
    * Pass games to game parser
+   *
+   * @url is categories location
+   * @saver is function to save games
+   * @cb is callback function
    */
-  categories : function (url, cb) {
+  categories : function (url, saver, cb) {
     if(!url || !url.length) {
       return cb(new Error('Wrong Url'));
+    }
+    if(typeof cb !== 'function') {
+      cb = saver;
+      saver = function (data, next) {
+        next();
+      };
     }
 
     getContent(url, function (err, w) {
@@ -65,7 +80,7 @@ var pages = {
       syncChain(cats, pages.category, function (err, games) {
         if(err) return cb(err);
 
-        syncChain(games, pages.game, cb);
+        syncChain(games, pages.game, saver, cb);
       });
     });
 
@@ -74,7 +89,7 @@ var pages = {
   /**
    * Go through all games in category and return edit game links array
    */
-  category : function (url, cb) {
+  category : function (url, saver, cb) {
     if(!url || !url.length) {
       return cb(new Error('Wrong url'));
     }
@@ -92,14 +107,20 @@ var pages = {
         games.push(root + w.$(this).text().replace(/ /g, '_') + '&action=edit');
       });
 
-      cb(null, games);
+      if(saver) {
+        saver(games, function (data) {
+          cb(null, data);
+        });
+      } else {
+        cb(null, games);
+      }
     });
   },
 
   /**
    * Get game's data from it's editing page
    */
-  game : function (url, cb) {
+  game : function (url, saver, cb) {
     if(!url || !url.length) {
       return cb(new Error('Wrong Url'));
     }
@@ -159,7 +180,13 @@ var pages = {
       game.data = rules;
       game.categories = cats;
 
-      cb(null, game);
+      if(saver) {
+        saver(game, function (data) {
+          cb(null, data);
+        });
+      } else {
+        cb(null, game);
+      }
 
       /*
 
