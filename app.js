@@ -6,9 +6,10 @@
 var express  = require('express'),
     app      = express(),
     path     = require('path'),
-    mongoose = require('mongoose'),
-    router   = require(path.join(__dirname, 'config/router')),
-    config   = require(path.join(__dirname, 'config/config')),
+    mongoose = require('mongoose');
+
+
+var config   = require(path.join(__dirname, 'config/config')),
     port     = process.env.PORT || 3000;
 
 // DB connection
@@ -29,14 +30,17 @@ mongoose.connection.on('disconnected', function (err) {
 require(path.join(__dirname, 'helpers/models/db'));
 
 // settings
-app.disable('x-powered-by');
-app.set('port', port);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app
+  .disable('x-powered-by')
+  .set('port', port)
+  .set('views', path.join(__dirname, 'views'))
+  .set('view engine', 'jade')
 
-app.use(express.static(path.join(__dirname, 'public')));
+  .use(express.static(path.join(__dirname, 'public')))
 //app.use(express.favicon(__dirname + '/public/design/favicon.ico'));
-app.use(require('body-parser')());
+  .use(require('body-parser')())
+  .use(require('cookie-parser')())
+  .use(require('express-session')({ secret : config.app.name }));
 
 // development only
 if ('development' == app.get('env')) {
@@ -44,8 +48,8 @@ if ('development' == app.get('env')) {
 }
 
 // Register routes
-app.use('/', router);
+require('./config/router')(app);
 
 // Start the server
 app.listen(port);
-console.log('Running on :' + port);
+console.log('Server is running on port ' + port);

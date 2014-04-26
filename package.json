@@ -7,11 +7,13 @@
     "start" : "node app.js"
   },
   "dependencies" : {
-    "express"     : "~4.0.0",
-    "mongoose"    : "*",
-    "jade"        : "*",
-    "jsdom"       : "*",
-    "body-parser" : "*"
+    "express"        : "*",
+    "mongoose"       : "*",
+    "jade"           : "*",
+    "jsdom"          : "*",
+    "body-parser"    : "*",
+    "cookie-parser"  : "*",
+    "express-session": "*"
   },
   "repository" : {
     "type" : "git",

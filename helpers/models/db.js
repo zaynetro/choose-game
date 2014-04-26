@@ -80,7 +80,7 @@ gameSchema.statics = {
       options = null;
     }
 
-    options || (options = defaults);
+    options = options || defaults;
 
     var rand = Math.random();
 

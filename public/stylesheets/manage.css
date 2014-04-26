@@ -1,0 +1,88 @@
+.managepage .block li {
+  margin: 0.3em 0;
+  font-size: 1.1em;
+}
+
+.managepage .block ul label:after {
+  content: ':';
+}
+
+.managepage .block ul a {
+  padding-left: 0.3em;
+}
+
+.managepage .addform .text,
+.managepage .addform .button,
+.managepage .addform select {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.4em 0;
+  font-size: 0.8em;
+}
+
+.managepage .addform .text {
+  width: 55%;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+
+.managepage .addform .button {
+  padding-left: 1em;
+  padding-right: 1em;
+  cursor: pointer;
+}
+
+#loader {
+  display: none;
+}
+
+#output {
+  margin-top: 2em;
+}
+
+#output li {
+  padding: 0.5em 0;
+  transition: background-color 0.2s;
+}
+
+#output li:hover {
+  background-color: #eee;
+}
+
+#output li.parsed {
+ background-color: #CBF5DD;
+}
+
+#output li:hover #runlinkbtn {
+  visibility: visible;
+}
+
+#output li:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#output li .runlink {
+  float: left;
+  width: 10%;
+  text-align: center;
+}
+
+#output li #runlinkbtn {
+  visibility: hidden;
+  cursor: pointer;
+}
+
+#output li .link {
+  width: 90%;
+  padding-top: 0.2em;
+}
+
+#output ul ul {
+  margin: 1em 0 0 2em;
+}
+
+#output ul > li > ul > li:hover {
+  background-color: #ddd;
+}

@@ -39,6 +39,7 @@
       }
       this.$.loader.hide();
       this.events();
+      $(document).scrollTop(0);
     },
 
     loadNext : function () {
@@ -54,9 +55,11 @@
 
     appendCats : function () {
       this.$.gameCats.empty();
-      this.current.game.categories && this.current.game.categories.forEach(function (el) {
-        this.$.gameCats.append("<li><a href='/category/"+el.name.replace(/ /g, '_')+"'>"+el.name+"</a></li>");
-      }.bind(this));
+      if(this.current.game.categories) {
+        this.current.game.categories.forEach(function (el) {
+          this.$.gameCats.append("<li><a href='/category/"+el.name.replace(/ /g, '_')+"'>"+el.name+"</a></li>");
+        }.bind(this));
+      }
     },
 
     getCats : function () {
@@ -112,7 +115,7 @@
       var current = {
         game : this.current.next,
         next : null
-      }
+      };
 
       this.router.goTo(url, current);
       this.set(current);
@@ -131,7 +134,7 @@
       return {
         goTo : function (url, obj) {
           if(!url || !url.length) return false;
-          obj || (obj = {});
+          obj = obj || {};
 
           if(window.location.pathname === url) return;
 

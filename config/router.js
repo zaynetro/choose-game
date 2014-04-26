@@ -5,38 +5,50 @@
 
 var express = require('express'),
     routes  = require('../routes/'),
-    api     = require('../routes/api');
+    api     = require('../routes/api'),
+    manage  = require('../routes/manage');
 
+module.exports = function (app) {
 
-var router = express.Router();
+  var pageRouter = express.Router();
 
-/**
- * Basic functionality
- */
-router.get('/',      routes.index);
-router.get('/about', routes.about);
+  pageRouter
+    // Basic functionality
+    .get('/',      routes.index)
+    .get('/about', routes.about)
 
-// Games
-router.get('/game/:name',     routes.game);
+    // Games
+    .get('/game/:name',     routes.game)
 
-// Categories
-router.get('/category',       routes.categories);
-router.get('/category/:name', routes.category);
+    // Categories
+    .get('/category',       routes.categories)
+    .get('/category/:name', routes.category);
 
-// Remove later
-router.get( '/add',     routes.addform);
-router.post('/add',     routes.addData);
+  var manageRouter = express.Router();
 
-/**
- * API + XHR requests
- */
-router.all('/api*', function (req, res, next) {
-  //if(!req.xhr) return res.send('Only xhr requests');
+  manageRouter
+    // Manage
+    .get('/',     manage.page)
+    .post('/add', manage.addLink);
 
-  next();
-});
-router.get( '/api/game',       api.getRandom);
-router.get( '/api/game/:name', api.getGame);
-router.post('/api/add/all',    api.addAll);
+  var apiRouter = express.Router();
 
-module.exports = router;
+  apiRouter
+    /**
+     * API + XHR requests
+     */
+    .all('/*', function (req, res, next) {
+      //if(!req.xhr) return res.send('Only xhr requests');
+
+      next();
+    })
+    .get( '/game',       api.getRandom)
+    .get( '/game/:name', api.getGame)
+    .post('/add/all',    api.addAll);
+
+  app
+    .use('/',   pageRouter)
+    .use('/1',  manageRouter)
+    .use('/api', apiRouter);
+
+};

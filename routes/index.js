@@ -2,9 +2,7 @@
  * Pages
  */
 
-var pagesParse  = require('../helpers/parsers/pages'),
-    syntaxParse = require('../helpers/parsers/syntax'),
-    mongoose    = require('mongoose');
+var mongoose    = require('mongoose');
 
 function render404(res) {
   res.render('404', {
@@ -19,7 +17,7 @@ function alphaList(list) {
       letter = '',
       i      = -1;
 
-  res || (res = []);
+  res = res || [];
 
   list.forEach(function (el) {
     if((el.name[0].toLowerCase() !== letter)) {
@@ -87,8 +85,9 @@ exports.categories = function (req, res) {
           .exec(function (err, cats) {
             if(err) console.log(err);
 
+            var list;
             if(cats) {
-              var list = alphaList(cats);
+              list = alphaList(cats);
             }
 
             if(!list.length) list = null;
@@ -136,8 +135,9 @@ exports.category = function (req, res) {
           .exec(function (err, games) {
             if(err) console.log(err);
 
+            var list;
             if(games) {
-              var list = alphaList(games);
+              list = alphaList(games);
             }
 
             if(!list.length) list = null;
@@ -156,63 +156,4 @@ exports.category = function (req, res) {
       return render404(res);
     }
   );
-};
-
-
-/**
- * ######################################################
- * Remove later
- *
- */
-exports.addform = function (req, res) {
-  res.render('addform', {
-    title : 'Adding form'
-  });
-};
-
-exports.addData = function (req, res) {
-
-  var info     = req.body,
-      Game     = mongoose.model('Game'),
-      Category = mongoose.model('Category');
-
-  pagesParse.game(info.url, function (err, found) {
-    if(err) {
-      console.log(err);
-      return res.redirect('/add?false');
-    }
-
-    var cats = [],
-        data = {};
-    found.categories.forEach(function (el) {
-      cats.push({
-        name : el
-      });
-    });
-
-    Category.create(cats, function (err) {
-      if(err && err.code != 11000) console.log(err);
-
-      Category.getIDs(found.categories, function (err, ids) {
-        if(err) console.log(err);
-
-        data.name = found.name;
-        data.data = found.data;
-        data.categories = ids;
-
-        var game = new Game(data);
-        game.save(function (err) {
-          if(err && err.code != 11000) {
-            console.log(err);
-            return res.redirect('/add?false');
-          }
-
-          res.redirect('/add?true');
-        });
-
-      });
-
-    });
-
-  });
 };

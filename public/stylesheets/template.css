@@ -160,7 +160,8 @@ a:hover {
   letter-spacing: 1px;
   color: #222;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: background 0.2s,
+              opacity 0.2s;
 }
 
 .page .nextlink a:hover {
@@ -187,11 +188,40 @@ a:hover {
   margin: 0 0.5em;
 }
 
+.page .aboutpage .choices {
+  padding: 1em 0 0;
+}
+
+.page .aboutpage .choiceblock {
+  float: left;
+  display: block;
+  padding: 0.5em 0;
+  text-align: center;
+  width: 40%;
+  font-size: 1.2em;
+  background-color: #64DE98;
+  transition: background-color 0.2s;
+  text-decoration: none;
+  color: #222;
+}
+
+.page .aboutpage .choiceblock:hover {
+  background-color: #2ecc71;
+}
+
+.page .aboutpage .choiceseparator {
+  float: left;
+  padding: 0.6em 0;
+  text-align: center;
+  width: 20%;
+  font-size: 1em;
+}
+
 
 #loader {
   position: relative;
   overflow: hidden;
-  padding: 5px;
+  padding: 5px 0;
 }
 
 .loadingbar {
@@ -293,4 +323,28 @@ a:hover {
     width: 100%;
     padding: 0 1em;
   }
+
+  .page .nextlink {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0.8;
+  }
+
+  .page .nextlink:hover {
+    opacity: 1;
+  }
+
+  .page footer {
+    padding-bottom: 3em;
+  }
+}
+
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
 }

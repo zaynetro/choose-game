@@ -49,12 +49,11 @@ var pages = {
   /**
    * From categories page get all categories and pass them to category function synchronously
    * Pass games to game parser
-   *
-   * @url is categories location
-   * @saver is function to save games
-   * @cb is callback function
+   * @param  {string}   url   link to categories by type list
+   * @param  {function} saver saving data function
+   * @param  {Function} cb    callback
    */
-  categories : function (url, saver, cb) {
+  oldcategories : function (url, saver, cb) {
     if(!url || !url.length) {
       return cb(new Error('Wrong Url'));
     }
@@ -87,7 +86,41 @@ var pages = {
   },
 
   /**
+   * Get all categories from the page
+   * @param  {String}   url url of parsing page
+   * @param  {Function} cb  callback(error, array of resulting data)
+   */
+  categories : function (url, cb) {
+    if(!url || !url.length) {
+      return cb(new Error('Wrong Url'));
+    }
+
+    getContent(url, function (err, w) {
+      if(err) return cb(err);
+
+      var cats = [],
+          root = w.document._documentRoot;
+
+      root = root.substring(0, root.lastIndexOf('/'));
+
+      w.$('#mw-subcategories').find('a').each(function () {
+        cats.push(root + w.$(this).attr('href'));
+      });
+
+      cb(null, cats);
+    });
+
+  },
+
+  /**
    * Go through all games in category and return edit game links array
+   */
+  /**
+   * Go through all games in category and return edit game links array
+   * or pass them to the saver function
+   * @param  {String}   url   category page url
+   * @param  {Function} saver saving function or callback
+   * @param  {Function} cb    callback or null
    */
   category : function (url, saver, cb) {
     if(!url || !url.length) {

@@ -1,0 +1,78 @@
+extends layout
+
+block customHead
+  link(rel='stylesheet', href='/stylesheets/manage.css')
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1= title
+
+      main(role='main')
+
+        div.managepage
+          h2 Statistics
+          div.block
+            ul
+              each item in models
+                li
+                  label=item.name
+                  a(href='#')=item.count
+
+          h2 Add form
+          div.block
+            div.addform
+              form#addingform
+                input#url.text(type='text' name='url' placeholder='url')
+                select(name='type')
+                  option(value='1') Category with categories
+                  option(value='2') Category with games
+                  option(value='3') Game
+                input#run.button(type='button' value='Run')
+
+          div#loader
+            div.loadingbar
+
+          div#output
+            ul
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_for_road_trips/
+              li.parsed
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_in_a_forest/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_in_complete_darkness/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_on_the_floor/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Indoor_game/
+                ul
+                  li
+                    div.runlink: button#runlinkbtn run
+                    div.link http://www.games-wiki.org/wiki/Category:Game_in_complete_darkness/
+                  li
+                    div.runlink: button#runlinkbtn run
+                    div.link http://www.games-wiki.org/wiki/Category:Game_on_the_floor/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Outdoor_game/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_on_a_table/
+              li
+                div.runlink: button#runlinkbtn run
+                div.link http://www.games-wiki.org/wiki/Category:Game_in_water/
+
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About
+
+  script(src='/javascripts/jquery-2.1.0.min.js')
+  script(src='/javascripts/manage.js')
+
