@@ -127,6 +127,11 @@ var pages = {
       return cb(new Error('Wrong url'));
     }
 
+    if(typeof cb !== 'function') {
+      cb = saver;
+      saver = null;
+    }
+
     getContent(url, function (err, w) {
       if(err) return cb(err);
 
@@ -152,10 +157,18 @@ var pages = {
 
   /**
    * Get game's data from it's editing page
+   * @param  {String}   url   [description]
+   * @param  {Function} saver saving function or callback
+   * @param  {Function} cb    callback or null
    */
   game : function (url, saver, cb) {
     if(!url || !url.length) {
       return cb(new Error('Wrong Url'));
+    }
+
+    if(typeof cb !== 'function') {
+      cb = saver;
+      saver = null;
     }
 
     getContent(url, function (err, w) {

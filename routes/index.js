@@ -2,7 +2,7 @@
  * Pages
  */
 
-var mongoose    = require('mongoose');
+var mongoose = require('mongoose');
 
 function render404(res) {
   res.render('404', {
@@ -156,4 +156,36 @@ exports.category = function (req, res) {
       return render404(res);
     }
   );
+};
+
+exports.loginPage = function (req, res) {
+  res.render('login', {
+    title : 'Login'
+  });
+};
+
+exports.login = function (req, res) {
+
+  var Pass = mongoose.model('Pass'),
+      name = req.body.name,
+      code = req.body.code;
+
+  if(!code || !code.length || !name || !name.length) {
+    return res.render('login', {
+      title : 'Login'
+    });
+  }
+
+  Pass.findOne({ name : name }, function (err, pass) {
+    if(err) console.log(err);
+
+    if(pass && pass.authenticate(code)) {
+      req.session.user = pass._id;
+      return res.redirect('/1');
+    }
+
+    res.render('login', {
+      title : 'Login'
+    });
+  });
 };

@@ -32,57 +32,69 @@
   cursor: pointer;
 }
 
-#loader {
+.managepage .loaderwrap {
+  height: 7px;
+}
+
+.managepage #loader {
   display: none;
 }
 
-#output {
+.managepage #output {
   margin-top: 2em;
 }
 
-#output li {
+.managepage #output li {
   padding: 0.5em 0;
   transition: background-color 0.2s;
 }
 
-#output li:hover {
+.managepage #output li:hover {
   background-color: #eee;
 }
 
-#output li.parsed {
+.managepage #output li.parsed {
  background-color: #CBF5DD;
 }
 
-#output li:hover #runlinkbtn {
+.managepage #output li:hover #runlinkbtn {
   visibility: visible;
 }
 
-#output li:after {
+.managepage #output li:after {
   content: "";
   display: table;
   clear: both;
 }
 
-#output li .runlink {
+.managepage #output li .runlink {
   float: left;
   width: 10%;
   text-align: center;
 }
 
-#output li #runlinkbtn {
+.managepage #output li #runlinkbtn {
   visibility: hidden;
   cursor: pointer;
 }
 
-#output li .link {
+.managepage #output li .link {
   width: 90%;
   padding-top: 0.2em;
 }
 
-#output ul ul {
+.managepage #output ul ul {
   margin: 1em 0 0 2em;
 }
 
-#output ul > li > ul > li:hover {
+.managepage #output ul > li > ul > li:hover {
   background-color: #ddd;
+}
+
+.managepage #output #runallgames {
+  visibility: hidden;
+}
+
+.managepage #output ul:hover > li > #runallgames {
+  visibility: visible;
 }

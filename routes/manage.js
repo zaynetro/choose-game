@@ -56,7 +56,9 @@ exports.page = function (req, res) {
 
 exports.addLink = function (req, res) {
 
-  var data = req.body;
+  var Category = mongoose.model('Category'),
+      Game     = mongoose.model('Game'),
+      data     = req.body;
 
   if(typeof data !== 'object') return res.json(500, { error : 'Wrong data' });
 
@@ -75,7 +77,51 @@ exports.addLink = function (req, res) {
         res.json(data);
       });
     },
-    '3' : null
+    '3' : function (url) {
+      pagesParse.game(
+        url,
+
+        function (found, next) {
+
+          var cats = [],
+              data = {};
+          found.categories.forEach(function (el) {
+            cats.push({
+              name : el
+            });
+          });
+
+          Category.create(cats, function (err) {
+            if(err && err.code != 11000) console.log(err);
+
+            Category.getIDs(found.categories, function (err, ids) {
+              if(err) console.log(err);
+
+              data.name = found.name;
+              data.data = found.data;
+              data.categories = ids;
+
+              var game = new Game(data);
+              game.save(function (err) {
+                if(err && err.code != 11000) {
+                  console.log(err);
+                  return next(null);
+                }
+
+                return next(game.name);
+              });
+
+            });
+
+          });
+        },
+
+        function (err, data) {
+          if(err) console.log(err);
+
+          res.json(data);
+        });
+    }
   };
 
   try {
@@ -83,52 +129,4 @@ exports.addLink = function (req, res) {
   } catch(e) {
     res.json(500, { error : 'Wrong type attribute' });
   }
-};
-
-
-exports.addData = function (req, res) {
-
-  var info     = req.body,
-      Game     = mongoose.model('Game'),
-      Category = mongoose.model('Category');
-
-  pagesParse.game(info.url, function (err, found) {
-    if(err) {
-      console.log(err);
-      return res.redirect('/add?false');
-    }
-
-    var cats = [],
-        data = {};
-    found.categories.forEach(function (el) {
-      cats.push({
-        name : el
-      });
-    });
-
-    Category.create(cats, function (err) {
-      if(err && err.code != 11000) console.log(err);
-
-      Category.getIDs(found.categories, function (err, ids) {
-        if(err) console.log(err);
-
-        data.name = found.name;
-        data.data = found.data;
-        data.categories = ids;
-
-        var game = new Game(data);
-        game.save(function (err) {
-          if(err && err.code != 11000) {
-            console.log(err);
-            return res.redirect('/add?false');
-          }
-
-          res.redirect('/add?true');
-        });
-
-      });
-
-    });
-
-  });
 };

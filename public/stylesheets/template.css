@@ -348,3 +348,29 @@ a:hover {
   display: table;
   clear: both;
 }
+
+.loginpage .line {
+  padding: 0.2em 0;
+}
+
+.loginpage .text {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.4em 0.5em;
+  font-size: 1em;
+}
+
+.loginpage .button {
+  width: 100%;
+  text-align: center;
+  padding: 0.4em 0;
+  font-size: 1.1em;
+  border: 0;
+  cursor: pointer;
+  background-color: #61CF8F;
+  transition: background-color 0.2s;
+}
+
+.loginpage .button:hover {
+  background-color: #27ae60;
+}

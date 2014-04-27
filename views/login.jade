@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  div.page
+    div.wrapper
+      header(role='title')
+        h1= title
+
+      main(role='main')
+
+        div.loginpage
+          form(method='post' action='')
+            div.line
+              input.text(type='text' name='name' placeholder='Name')
+            div.line
+              input.text(type='password' name='code' placeholder='Pass code')
+            div.line
+              input.button(type='submit' value='Go')
+
+      footer(role='helplinks')
+        a(href='/') Home
+        a(href='/about') About

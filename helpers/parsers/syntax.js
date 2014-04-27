@@ -124,6 +124,7 @@ var syntax = {
 
     for(var i = 0; i < lines.length; i += 1) {
       var line = lines[i];
+      line = line.trim();
 
       if(line.match(/^[=]{3}/) !== null && line.match(/[=]{3}$/) !== null) {
         // === Level 3 === -> <h3>Level 3</h3>

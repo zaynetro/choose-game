@@ -3,10 +3,27 @@
  *
  */
 
-var express = require('express'),
-    routes  = require('../routes/'),
-    api     = require('../routes/api'),
-    manage  = require('../routes/manage');
+var express  = require('express'),
+    routes   = require('../routes/'),
+    api      = require('../routes/api'),
+    manage   = require('../routes/manage'),
+    mongoose = require('mongoose');
+
+function ensureAuthenticated(req, res, next) {
+  if(req.session.user) {
+    mongoose.model('Pass').findById(req.session.user, function (err, pass) {
+      if(err) console.log(err);
+
+      if(pass) {
+        next();
+      } else {
+        res.redirect('/0');
+      }
+    });
+  } else {
+    res.redirect('/0');
+  }
+}
 
 module.exports = function (app) {
 
@@ -22,12 +39,17 @@ module.exports = function (app) {
 
     // Categories
     .get('/category',       routes.categories)
-    .get('/category/:name', routes.category);
+    .get('/category/:name', routes.category)
+
+    // Login
+    .get( '/0', routes.loginPage)
+    .post('/0', routes.login);
 
   var manageRouter = express.Router();
 
   manageRouter
     // Manage
+    .use(ensureAuthenticated)
     .get('/',     manage.page)
     .post('/add', manage.addLink);
 
@@ -37,7 +59,7 @@ module.exports = function (app) {
     /**
      * API + XHR requests
      */
-    .all('/*', function (req, res, next) {
+    .use(function (req, res, next) {
       //if(!req.xhr) return res.send('Only xhr requests');
 
       next();

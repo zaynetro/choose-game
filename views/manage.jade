@@ -31,43 +31,11 @@ block content
                   option(value='3') Game
                 input#run.button(type='button' value='Run')
 
-          div#loader
-            div.loadingbar
+          div.loaderwrap
+            div#loader
+              div.loadingbar
 
           div#output
-            ul
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_for_road_trips/
-              li.parsed
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_in_a_forest/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_in_complete_darkness/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_on_the_floor/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Indoor_game/
-                ul
-                  li
-                    div.runlink: button#runlinkbtn run
-                    div.link http://www.games-wiki.org/wiki/Category:Game_in_complete_darkness/
-                  li
-                    div.runlink: button#runlinkbtn run
-                    div.link http://www.games-wiki.org/wiki/Category:Game_on_the_floor/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Outdoor_game/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_on_a_table/
-              li
-                div.runlink: button#runlinkbtn run
-                div.link http://www.games-wiki.org/wiki/Category:Game_in_water/
-
 
       footer(role='helplinks')
         a(href='/') Home
